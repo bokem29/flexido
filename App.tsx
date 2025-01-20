@@ -1,37 +1,27 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
-import { useFonts } from 'expo-font'; 
+import * as Font from 'expo-font';
+import { useEffect, useState } from 'react';
+import AppNavigator from './AppNavigator';
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
-    'jakarta-regular': require('./assets/fonts/PlusJakartaSans-Regular.ttf'),
-    'jakarta-medium': require('./assets/fonts/PlusJakartaSans-Medium.ttf'),
-    'jakarta-semibold': require('./assets/fonts/PlusJakartaSans-SemiBold.ttf'),
-    'jakarta-bold': require('./assets/fonts/PlusJakartaSans-Bold.ttf'),
-    'jakarta-extrabold': require('./assets/fonts/PlusJakartaSans-ExtraBold.ttf'),
-    'jakarta-light': require('./assets/fonts/PlusJakartaSans-Light.ttf'),
-    'jakarta-italic': require('./assets/fonts/PlusJakartaSans-Italic.ttf'),
-  });
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+      const loadFonts = async () => {
+          await Font.loadAsync({
+              'figtree': require('./assets/fonts/Figtree-Regular.ttf'),
+              'figtree-semibold': require('./assets/fonts/Figtree-SemiBold.ttf') ,
+              'figtree-regular': require('./assets/fonts/Figtree-Regular.ttf')  // Adjust path if needed
+          });
+          setFontsLoaded(true);
+      };
+
+      loadFonts();
+  }, []);
 
   if (!fontsLoaded) {
-    return <ActivityIndicator size="large" color="#0000ff" />; 
+      return null; // Or you can show a loading indicator here
   }
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+  return <AppNavigator />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text:{
-    fontFamily: 'jakarta-regular'
-  }
-});
